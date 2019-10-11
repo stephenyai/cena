@@ -15,8 +15,8 @@ CREATE TABLE accounts (
 
 CREATE TABLE country (
     id INT NOT NULL AUTO_INCREMENT, 
-    country_name VARCHAR(255),
-    languages_name VARCHAR(255),
+    country_name VARCHAR(50),
+    languages_name VARCHAR(50),
     PRIMARY KEY(id) 
 );
 
@@ -35,7 +35,6 @@ CREATE TABLE orders (
     orders_serv_lang VARCHAR(255),
     orders_cust_eng VARCHAR(255),
     orders_cust_lang VARCHAR(255),
-
     PRIMARY KEY (id)
 );
 
