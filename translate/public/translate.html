@@ -11,10 +11,12 @@
 		<!-- <link rel="stylesheet" type="text/css" href="assets/css/login.css"> -->
 		<style type="text/css">
 			.server {
+				display: float;
 				border: 1px solid blue;
 				width: 200px;
 				height: 200px;
 				margin-left: 30px;
+				margin-bottom: 20px;
 			}
 
 			.customer {
@@ -23,51 +25,76 @@
 				height: 200px;
 				margin-left: 30px;
 			}
+
+			img {
+				height: 200px;
+				width: 200px;
+			}
+
 		</style>
 	</head>
 	<body>
-
-		<input id="thailand" type="submit" value="Thailand">
-		<input id="korea" type="submit" value="Korea">
-		<input id="china" type="submit" value="China">
-		<br><br>
-
 		<div class='phrases'>
           <label for='phrase'>Phrases</label>
-          <select id='phrase' name='phrase' onchange="runPhrase()">
+          <select id='phrase' name='phrase'>
           	<option value="" disabled selected>Select your option</option>
             <option class="greeting" value='greeting'>Greeting</option>
-            <option value='food'>Food</option>
+            <option value='order'>Food</option>
             <option value='bathroom'>Bathroom</option>
             <option value='bye'>Bye</option>
           </select>
         </div>
 
 		<div class='server'></div>
-		<br><br>
 		<div class='customer'></div>
+
+		<img src="assets/images/restaurant.svg">
 
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 		<script type="text/javascript">
+			// $('body').css('background-image', "url('/assets/images/thai-background.jpg')");
+			var state={}
+			generic()
+			var country = 'thai'
 
-		$('#thailand').on('click', function nativeLang() {
-			$('body').css('background-image', "url('/assets/images/thai-background.jpg')");
-
-		})
-
-
-
-			//each option on the dropdown menu will trigger a new function
+			$('#phrase').on('change', runPhrase);
+			// //each option on the dropdown menu will trigger a new function
 			function runPhrase() {
 
 				var selectedOption = document.getElementById("phrase").value;
+				$('.server').text(state.res[selectedOption].eng_server);
+				$('.server').append(state.res[selectedOption][`${country}_server`]);
+		  //   	if (selectedOption == 'greeting') {
+		  //   		greetingPhrase();
+				// } else if (selectedOption == 'food') {
+				// 	foodPhrase();
+				// } 
 
-		    	if (selectedOption == 'greeting') {
-		    		greetingPhrase();
-				} else {
-					console.log('else')
-				}
 			}
+
+
+			function generic() {
+				$.ajax({
+					url: '/generic',
+					method: 'GET'
+				}).then(function(res){
+					console.log(res)
+					state.res = res
+
+					// function serverEng() {
+					// 	$('.server').text(res[0].eng_server);
+					// 	$('.server').append(res[0].thai_server);
+
+					// }
+
+					// function customerEng() {
+					// 	$('.customer').text(res[0].eng_cust);
+					// }
+					// serverEng();
+					// setTimeout(customerEng, 1000);
+				})
+			}		
+
 
 			function greetingPhrase() {
 				$.ajax({
@@ -75,18 +102,46 @@
 					method: 'GET'
 				}).then(function(res){
 					console.log(res)
+					state.res = res
 
 					function serverEng() {
-						$('.server').text(res[0].server_eng);
+						$('.server').text(res[0].eng_server);
+						$('.server').append(res[0].thai_server);
+
 					}
 
 					function customerEng() {
-						$('.customer').text(res[0].cust_eng);
+						$('.customer').text(res[0].eng_cust);
 					}
 					serverEng();
 					setTimeout(customerEng, 1000);
 				})
 			}		
+
+			function foodPhrase() {
+				$.ajax({
+					url: '/food',
+					method: 'GET'
+				}).then(function(res) {
+					$('.server').text(res[1].eng_server);
+					$('.customer').text(res[1].eng_cust);
+				})
+			}
+
+
+			function translatePhrase() {
+
+
+			}
+
+
+
+
+
+
+
+
+
 
 
 		</script>

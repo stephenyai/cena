@@ -30,12 +30,38 @@ app.get('/', function(req, res){
 });
 
 app.get('/greeting', function(req, res) {
-	connection.query('SELECT * FROM translation', function (error, results, fields) {
+	connection.query('SELECT * FROM phrases', function (error, results, fields) {
 	  if (error) return res.send(error)
 	  // console.log(res)
 	  res.json(results);
 	});	
 });
+
+app.get('/food', function(req, res) {
+	connection.query('SELECT * FROM phrases', function (error, results, fields) {
+	  if (error) return res.send(error)
+	  // console.log(res)
+	  res.json(results);
+	});	
+});
+
+app.get('/generic', function(req, res) {
+	connection.query('SELECT * FROM phrases', function (error, results, fields) {
+	  if (error) return res.send(error)
+	  // console.log(res)
+	  // res.json(results);
+	  var result = {}
+
+	  for(var i=0; i < results.length; i++) {
+	  	result[results[i].phrase] = {
+	  		...results[i]
+	  		// thai_server: results[i].thai_server
+	  	}
+	  }
+	  res.json(result)
+	});	
+});
+
 
 app.listen(3000, function(){
 	console.log('listening on 3000');
