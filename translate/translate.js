@@ -23,11 +23,11 @@ var connection = mysql.createConnection({
  
 connection.connect();
 
-app.get('/', function(req, res){
-	console.log(__dirname)
-	// res.sendFile(path.join(__dirname));
-	res.redirect('/translate.html');
-});
+// app.get('/', function(req, res){
+// 	console.log(__dirname)
+// 	// res.sendFile(path.join(__dirname));
+// 	res.redirect('/translate.html');
+// });
 
 app.get('/greeting', function(req, res) {
 	connection.query('SELECT * FROM phrases', function (error, results, fields) {

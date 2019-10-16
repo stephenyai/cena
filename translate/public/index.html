@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<link rel="stylesheet" type="text/css" href="https://meyerweb.com/eric/tools/css/reset/reset.css">
+		<!-- <link rel="stylesheet" type="text/css" href="assets/css/login.css"> -->
+		<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="assets/css/reset.css"> <!-- CSS reset -->
+		<link rel="stylesheet" href="/assets/css/style.css"> <!-- Resource style -->
+		<script src="assets/js/modernizr.js"></script> <!-- Modernizr -->
+
+		<title>Cena</title>
+	</head>
+	<body>
+		<header>
+			<img src="/assets/images/our-logo.png">
+			<nav>
+			    <ul>
+			      <li><a href="#">Home</a></li>
+			      <li><a href="#">Saved</a></li>
+			      <li><a href="#">Log Out</a></li>
+			    </ul>
+			</nav>
+		</header>
+
+		<nav class="cd-stretchy-nav">
+			<a class="cd-nav-trigger" href="#0">
+				Menu
+				<span aria-hidden="true"></span>
+			</a>
+
+			<ul class="btn_ctry">
+				<li><a href="#0"><span id="thai">Thailand</span></a></li>
+				<li><a href="#0"><span id="kor">Korea</span></a></li>
+				<li><a href="#0"><span id="chn">China</span></a></li>
+			</ul>
+
+			<span aria-hidden="true" class="stretchy-nav-bg"></span>
+		</nav>
+		
+		<div class='phrases'>
+          <label for='phrase'>Phrases</label>
+          <select id='phrase' name='phrase'>
+          	<option value="" disabled selected>Select your option</option>
+            <option class="greeting" value='greeting'>Greeting</option>
+            <option value='order'>Food</option>
+            <option value='feedback'>Bathroom</option>
+            <option value='farewell'>Bye</option>
+          </select>
+        </div>
+
+        <div class='flex'>
+		<span class='cust'></span>
+		<span class='server'></span>
+        </div>
+	
+<audio id="audio" src="/assets/media/server-greeting.mp3">Audio not supported</audio>
+<button id="btn_play"></button>
+
+
+		<img src="assets/images/dialogue-setting.svg" id="cust-server">
+
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<script src="assets/js/jquery-2.1.4.js"></script>
+		<script src="assets/js/main.js"></script> <!-- Resource jQuery -->
+
+		<script type="text/javascript">
+
+			//object to store all data from database
+			var state = {};
+			var country = '';
+			var p;
+			var np;
+			var serverEng;
+			var ServerNative;
+			var btn;
+			var sound;
+
+			//run function for ajax call to get data
+			generic();
+
+			$('.btn_ctry li a').on('click', function() {
+				country = $(this).children()[0].id;
+				countryDefault(country)
+			});
+
+
+			$('#phrase').on('change', runPhrase);
+			// //each option on the dropdown menu will trigger a new function
+			function runPhrase() {
+
+			if (country) {
+				var selectedOption = document.getElementById("phrase").value;
+
+				function customerSpeech() {
+				//server english speech
+				$('.cust').empty();
+				p = $('<p>');
+				p.attr('class', 'speech');
+				serverEng = p.text(state.res[selectedOption].eng_server);
+				$('.cust').append(serverEng)
+				//serve native speech
+				np = $('<p>');
+				np.attr('class', 'speech');
+				serverNative = np.text(state.res[selectedOption][`${country}_server`]);
+				$('.cust').append(serverNative);
+
+				sound = $('<audio>');
+				sound.attr('id', 'audio');
+				sound.attr('src', '/assets/media/server-greeting.mp3');
+				btn = $('<button>');
+				btn.attr('id', 'btn_play');
+				}
+
+				$('.server').text(state.res[selectedOption].eng_cust);
+				$('.server').append(state.res[selectedOption][`${country}_cust`]);
+
+				setTimeout(customerSpeech, 1000);
+				} else {
+				console.log('choose a country')
+				}
+			}
+
+
+				function generic() {
+				$.ajax({
+				url: '/generic',
+				method: 'GET'
+				}).then(function(res){
+				console.log(res)
+				state.res = res
+				})
+				}		
+
+
+				function countryDefault(country) {
+
+				}
+
+				var playAudio = document.getElementById("audio");
+				var btn_play = document.getElementById("btn_play");
+
+
+				function audio_playPause() {
+				var isPaused = playAudio.paused;
+				playAudio['play']();
+				}
+				
+
+				btn_play.addEventListener("click", audio_playPause);
+
+
+
+
+
+
+
+
+
+		</script>
+	</body>
+</html>
