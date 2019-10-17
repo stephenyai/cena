@@ -10,6 +10,8 @@
 		<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700' rel='stylesheet' type='text/css'>
 		<link rel="stylesheet" href="assets/css/reset.css"> <!-- CSS reset -->
 		<link rel="stylesheet" href="/assets/css/style.css"> <!-- Resource style -->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+
 		<script src="assets/js/modernizr.js"></script> <!-- Modernizr -->
 
 		<title>Cena</title>
@@ -26,7 +28,11 @@
 			</nav>
 		</header>
 
+		<div>
+		</div>
 		<nav class="cd-stretchy-nav">
+			<p class="animated infinite pulse" id="choose">Choose a country to start learning! &#x290F;</p>
+
 			<a class="cd-nav-trigger" href="#0">
 				Menu
 				<span aria-hidden="true"></span>
@@ -41,33 +47,34 @@
 			<span aria-hidden="true" class="stretchy-nav-bg"></span>
 		</nav>
 		
-		<div class='phrases'>
-          <label for='phrase'>Phrases</label>
-          <select id='phrase' name='phrase'>
-          	<option value="" disabled selected>Select your option</option>
-            <option class="greeting" value='greeting'>Greeting</option>
-            <option value='order'>Food</option>
-            <option value='feedback'>Bathroom</option>
-            <option value='farewell'>Bye</option>
-          </select>
+	<section class="phrases">
+  		<div class="dropdown">
+	    	<select id='phrase' name="phrase" class="dropdown-select">
+	      		<option selected="selected" disabled="disabled" value="">Select a phrase</option>
+	      		<option value="greeting">Greeting</option>
+	      		<option value="order">Order</option>
+	      		<option value="feedback">Feedback</option>
+	      		<option value="pay">Pay</option>
+	      		<option value="farewell">Farewell</option>	
+	    	</select>
+  		</div>
+	</section>
+
+        <div class='flex'>
+			<span class='server'></span>
+			<span class='flag'></span>
+			<span class='cust'></span>
         </div>
 
         <div class='flex'>
-		<span class='cust'></span>
-		<span class='server'></span>
+        	<img id="friend" src="/assets/images/waiter.png">
+        	<div style="visibility: hidden;">menu</div>
+        	<img id="waiter" src="/assets/images/friendship.png">
         </div>
-	
-<audio id="audio" src="/assets/media/server-greeting.mp3">Audio not supported</audio>
-<button id="btn_play"></button>
-
-
-		<img src="assets/images/dialogue-setting.svg" id="cust-server">
-
 
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 		<script src="assets/js/jquery-2.1.4.js"></script>
 		<script src="assets/js/main.js"></script> <!-- Resource jQuery -->
-
 		<script type="text/javascript">
 
 			//object to store all data from database
@@ -75,88 +82,151 @@
 			var country = '';
 			var p;
 			var np;
+			var p2;
+			var np2;
 			var serverEng;
 			var ServerNative;
+			var custEng;
+			var custNative;
 			var btn;
 			var sound;
+			var btn2;
+			var sound2;
+			var selectedOption;
+			var err;
+			var toggle = {display: false}
+
+			//each option on the dropdown menu will trigger a new function
+			function runPhrase() {
+				if (country) {
+					setTimeout(serverSpeech, 0)
+					setTimeout(customerSpeech, 0);
+					} else {
+						errorCountry();
+				}
+			}
+
+			function errorCountry() {
+				if (!toggle.display) {
+					err = $('<p>');
+					$('.phrases').append(err.attr('id', 'needSelect').text("Please choose a country."))
+					toggle.display = true;
+				}
+			}
+
+			function generic() {
+				$.ajax({
+					url: '/generic',
+					method: 'GET'
+				}).then(function(res){
+					console.log(res)
+					state.res = res
+				})
+			}		
 
 			//run function for ajax call to get data
 			generic();
 
-			$('.btn_ctry li a').on('click', function() {
+			$('#phrase').on('change', runPhrase);
+			$(document).on('click', '#btn_play', audio_playServer);
+			$(document).on('click', '#btn_play2', audio_playCust);
+
+			$(".btn_ctry li a").on("click", function () {
 				country = $(this).children()[0].id;
-				countryDefault(country)
+				countryDefault(country);
+				$('#choose').empty();
+				err.empty();
+
+   				$('#phrase option').prop('selected', function() {
+        		return this.defaultSelected;
+    			});
+
+    			$('.server').empty();
+				$('.cust').empty();
 			});
 
+			function audio_playServer() {
+				sound[0].play();
+			};
 
-			$('#phrase').on('change', runPhrase);
-			// //each option on the dropdown menu will trigger a new function
-			function runPhrase() {
+			function audio_playCust() {
+				sound2[0].play();
+			};
 
-			if (country) {
-				var selectedOption = document.getElementById("phrase").value;
 
-				function customerSpeech() {
+			function serverSpeech() {
+			 	selectedOption = document.getElementById("phrase").value;
+			 	
 				//server english speech
-				$('.cust').empty();
+				$('.server').empty();
 				p = $('<p>');
-				p.attr('class', 'speech');
+				p.attr('class', 'animated fadeInUp speech');
 				serverEng = p.text(state.res[selectedOption].eng_server);
-				$('.cust').append(serverEng)
+				$('.server').append(serverEng)
 				//serve native speech
 				np = $('<p>');
-				np.attr('class', 'speech');
+				np.attr('class', 'animated fadeInUp speech');
 				serverNative = np.text(state.res[selectedOption][`${country}_server`]);
-				$('.cust').append(serverNative);
-
+				$('.server').append(serverNative);
+				//audio 
 				sound = $('<audio>');
 				sound.attr('id', 'audio');
-				sound.attr('src', '/assets/media/server-greeting.mp3');
+				sound.attr('src', state.res[selectedOption][`${country}_audio_server`]);
 				btn = $('<button>');
 				btn.attr('id', 'btn_play');
-				}
+				btn.attr('class', 'animated fadeInUp')
+				$('.server').append(sound,btn);
+			}
 
-				$('.server').text(state.res[selectedOption].eng_cust);
-				$('.server').append(state.res[selectedOption][`${country}_cust`]);
 
-				setTimeout(customerSpeech, 1000);
-				} else {
-				console.log('choose a country')
+			function customerSpeech() {
+			 	selectedOption = document.getElementById("phrase").value;
+
+				// $('.server').text(state.res[selectedOption].eng_cust);
+				// $('.server').append(state.res[selectedOption][`${country}_cust`]);
+
+				//customer english speech
+				$('.cust').empty();
+				p2 = $('<p>');
+				p2.attr('class', 'animated fadeInUp speech');
+				custEng = p2.text(state.res[selectedOption].eng_cust);
+				$('.cust').append(custEng);
+				//customer native speech
+				np2 = $('<p>');
+				np2.attr('class', 'animated fadeInUp speech');
+				custNative = np2.text(state.res[selectedOption][`${country}_cust`]);
+				$('.cust').append(custNative);
+				//audio 
+				sound2 = $('<audio>');
+				sound2.attr('id', 'audio2');
+				sound2.attr('src', state.res[selectedOption][`${country}_audio_cust`]);
+				btn2 = $('<button>');
+				btn2.attr('id', 'btn_play2');
+				btn2.attr('class', 'animated fadeInUp')
+				$('.cust').append(sound2,btn2);
+			}
+
+
+			function countryDefault(country) {
+
+				if (country == 'thai') {
+					$('.flag').empty();
+					$('.flag').append("<img id='photo-flag' src='assets/images/thailand-flag.png'/>");
+					$('.flag').prepend($('<p>').attr('id', 'thaiii'));
+				} else if (country == 'kor') {
+					$('.flag').empty();
+					$('.flag').append("<img id='photo-flag' src='assets/images/korea.png'/>");
+					$('.flag').prepend($('<p>').attr('id', 'koreaaa'));
+				} else if (country == 'chn') {
+					$('.flag').empty();
+					$('.flag').append("<img id='photo-flag' src='assets/images/china-flag.png'/>");
+					$('.flag').prepend($('<p>').attr('id', 'chinaaa'));
 				}
 			}
 
 
-				function generic() {
-				$.ajax({
-				url: '/generic',
-				method: 'GET'
-				}).then(function(res){
-				console.log(res)
-				state.res = res
-				})
-				}		
 
-
-				function countryDefault(country) {
-
-				}
-
-				var playAudio = document.getElementById("audio");
-				var btn_play = document.getElementById("btn_play");
-
-
-				function audio_playPause() {
-				var isPaused = playAudio.paused;
-				playAudio['play']();
-				}
 				
-
-				btn_play.addEventListener("click", audio_playPause);
-
-
-
-
-
 
 
 

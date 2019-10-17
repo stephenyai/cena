@@ -20,15 +20,20 @@ CREATE TABLE phrases (
 	kor_cust VARCHAR(255) NOT NULL,
 	chn_cust VARCHAR(255) NOT NULL,
 	eng_cust VARCHAR(255) NOT NULL,
+	thai_audio_server VARCHAR(255) NOT NULL,
+	kor_audio_server VARCHAR(255) NOT NULL,
+	chn_audio_server VARCHAR(255) NOT NULL,
+	thai_audio_cust VARCHAR(255) NOT NULL,
+	kor_audio_cust VARCHAR(255) NOT NULL,
+	chn_audio_cust VARCHAR(255) NOT NULL,	
 	PRIMARY KEY(id)
 );
 
 
 INSERT INTO country (country_name) VALUES ('Thailand'), ('Korea'), ('China');
-INSERT INTO phrases (phrase, thai_server, kor_server, chn_server, eng_server, thai_cust, kor_cust, chn_cust, eng_cust) VALUES 
-('greeting', 'สวัสดีค่ะ สบายดีมั้ยค่ะ', '안녕하세요', '你好吗', 'Hi there!', 'ครับ', '안녕', '你好', 'Hello'),
-('order', 'จะรับอะไรดีค่ะ', '안녕하세요', '你们想要点些什么呢?', 'What would you like to order?', 'ผม ขอ…..?', '주문', '我可以点..?', 'Can I please have...?'),
-('suggestion', 'ผัดไทย', 'galbi', 'dim sum', 'Food recommendations...', 'มีอะไรแนะนำบ้างคะ?', 'korean recommend', '你可以给我推荐一下吗？', 'Do you have any recommendations?'),
-('feedback', 'อาหารายเป็นยังไงบ้างคะ', 'korean ask food', '东西好吃吗？', 'How is the food?', 'อร่อยคะ', 'korean tastes great', '很好吃', 'Delicious!'),
-('pay', 'ตกลงคะ', '세', '好的.', 'Sure', 'คิดเงินด้วยคะ', 'korean check', '我想要买单.', 'Check, please'),
-('farewell', 'ครับ! กลับมาใหม่คะ', 'korean come again', '再见！欢迎下次再来！', 'Thank you! Come again!', 'ครับ!', 'gamsa', '谢谢', 'Thank you!');
+INSERT INTO phrases (phrase, thai_server, kor_server, chn_server, eng_server, thai_cust, kor_cust, chn_cust, eng_cust, thai_audio_server, kor_audio_server, chn_audio_server, thai_audio_cust, kor_audio_cust, chn_audio_cust) VALUES 
+('greeting', 'สวัสดีค่ะ', '안녕하세요!', '你好吗', 'Hi there!', 'สวัสดีครับ', '안녕하세요.', '你好.', 'Hello.', '/assets/media/thai-server-greeting.mp3', '/assets/media/korea-server-greeting.mp3', '/assets/media/china-server-greeting.mp3', '/assets/media/thai-cust-greeting.mp3', '/assets/media/korea-cust-greeting.mp3', '/assets/media/china-cust-greeting.mp3'),
+('order', 'จะรับอะไรดีค่ะ', '무얼 드릴까요?', '你们想要点些什么呢?', 'What would you like to order?', 'ฉันขอ...?', '...주세요.', '我可以点...?', 'Can I please have...?', '/assets/media/thai-server-order.mp3', '/assets/media/korea-server-order.mp3', '/assets/media/china-server-order.mp3', '/assets/media/thai-cust-order.mp3', '/assets/media/korea-cust-order.mp3', '/assets/media/china-cust-order.mp3'),
+('feedback', 'อาหารเป็นอย่างไรบ้างค่ะ', '음식 어때요?', '东西好吃吗?', 'How is the food?', 'อร่อยครับ', '맛있어요!', '很好吃!', 'Delicious!', '/assets/media/thai-server-feedback.mp3', '/assets/media/korea-server-feedback.mp3', '/assets/media/china-server-feedback.mp3', '/assets/media/thai-cust-feedback.mp3', '/assets/media/korea-cust-feedback.mp3', '/assets/media/china-cust-feedback.mp3'),
+('pay', 'ตกลงคะ', '예!', '好的.', 'Sure!', 'คิดเงินด้วยครับ', '계산해주세요.', '我想要买单.', 'Check, please.', '/assets/media/thai-server-pay.mp3', '/assets/media/korea-server-pay.mp3', '/assets/media/china-server-pay.mp3', '/assets/media/thai-cust-pay.mp3', '/assets/media/korea-cust-pay.mp3', '/assets/media/china-cust-pay.mp3'),
+('farewell', 'ขอบคุณคะ! กลับมาใหม่นะคะ!', '감사합니다! 또 오세요!', '再见！欢迎下次再来！', 'Thank you! Come again!', 'ขอบคุณครับ!', '감사합니다!', '谢谢!', 'Thank you!', '/assets/media/thai-server-farewell.mp3', '/assets/media/korea-server-farewell.mp3', '/assets/media/china-server-farewell.mp3', '/assets/media/thai-cust-farewell.mp3', '/assets/media/korea-cust-farewell.mp3', '/assets/media/china-cust-farewell.mp3');
