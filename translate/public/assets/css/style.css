@@ -220,10 +220,16 @@ left: 120px;
   margin: 5px;
 }
 
-.needSelect {
+#needSelect {
   margin-top: 5px;
+  color: red;
 }
 
+#choose {
+  margin-right: 150px;
+  margin-top: 13px;
+  font-size: 18px;
+}
 /* -------------------------------- 
 
 Stretchy Nav style - common to:
