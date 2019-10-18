@@ -63,7 +63,7 @@ app.get('/generic', function(req, res) {
 });
 
 
-app.listen(3000, function(){
+app.listen(process.env.PORT, function(){
 	console.log('listening on 3000');
 });
 
